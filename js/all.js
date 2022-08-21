@@ -35,23 +35,23 @@ function App(){
   ])
   // save input data 
   function saveInput(e){
-    setValue(e.target.value)
+    setValue(e.target.value) 
   }
 
   // update list
   function updateList() {
     // save the data
-    setItems([...items, { checked:false ,todo: value }])
+    setItems([...items, { checked:false ,todo: value }] )
+    setUnDoList( [...items, { checked:false ,todo: value }] ) 
     // after save data, clear input value
     setValue('')
-    setUnDoList( items.filter( item => !item.checked) ) 
   }
   
   // remove item
   function removeItem(e){
     // console.log(e.target.parentNode.parentNode.className)
     const temp = e.target.parentNode.parentNode.className
-    setItems(items.filter( item => item.todo != temp))
+    setItems(items.filter( item => item.todo !== temp))
     setUnDoList( items.filter(item => !item.checked) ) 
   }
   const [unDoList, setUnDoList] = useState([...items])
@@ -192,7 +192,7 @@ function App(){
                   <Show/>
                 </ul>
                 <div className="todoList_statistics">
-                  <p> {didList.length} 個已完成項目</p>
+                  <p> {unDoList.length} 個待完成項目</p>
                   <a href="#" onClick={clearDid}>清除已完成項目</a>
                 </div>
               </div>
