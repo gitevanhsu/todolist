@@ -4,55 +4,80 @@ const { useState, } = React
 function App(){
   // get and update input value
   const [ value, setValue ] = useState('')
+  const [ id, setId ] = useState()
   // console.log(value)
 
   // record list item 
   const [ items, setItems ] = useState([
     { 
+      id: "0",
       todo: "把冰箱發霉的檸檬拿去丟",
       checked: false,
     },
     {
+      id: "1",
       todo: "打電話叫媽媽匯款給我",
       checked: false,
     },
     {
+      id: "2",
       todo: "整理電腦資料夾",
       checked: false,
     },
     {
+      id: "3",
       todo: "繳電費水費瓦斯費",
       checked: false,
     },
     {
+      id: "4",
       todo: "約vicky禮拜三泡溫泉",
       checked: false,
     },
     {
+      id: "5",
       todo: "約ada禮拜四吃晚餐",
+      checked: false,
+    },
+    {
+      id: "6",
+      todo: "123",
+      checked: false,
+    },
+    {
+      id: "7",
+      todo: "123",
       checked: false,
     }
   ])
   // save input data 
   function saveInput(e){
-    setValue(e.target.value) 
+    const value = e.target.value
+    const id = e.target.className
+    setValue(value)
+    setId(id)
   }
 
   // update list
   function updateList() {
     // save the data
-    setItems([...items, { checked:false ,todo: value }] )
-    setUnDoList( [...items, { checked:false ,todo: value }] ) 
-    // after save data, clear input value
-    setValue('')
+    if (value === '' ) {
+      alert('請輸入項目')
+    } else {
+      setItems([...items, { id ,todo: value, checked:false }] )
+      setUnDoList( [...items, { id, checked:false ,todo: value }] ) 
+      // after save data, clear input value
+      setValue('')
+      // console.log(items)
+    }
   }
   
   // remove item
   function removeItem(e){
     // console.log(e.target.parentNode.parentNode.className)
-    const temp = e.target.parentNode.parentNode.className
-    setItems(items.filter( item => item.todo !== temp))
-    setUnDoList( items.filter(item => !item.checked) ) 
+    const temp = e.target.parentNode.parentNode
+    setItems( items.filter(item => item.id !== temp.id))
+    setUnDoList( items.filter(item => item.id !== temp.id))
   }
   const [unDoList, setUnDoList] = useState([...items])
   
@@ -62,33 +87,41 @@ function App(){
   // save the did item
   function updateDidList(e){
     setItems(items.map( item => {
-      if (item.todo === e.target.parentNode.parentNode.className){
+      // console.log(item.todo ,item.id)
+      // console.log(e.target.parentNode.parentNode.className, e.target.parentNode.parentNode.id)
+      if (item.todo === e.target.parentNode.parentNode.className && item.id === e.target.parentNode.parentNode.id){
         item.checked = !item.checked
       }
-      setDidList( items.filter(item => item.checked) )
-      setUnDoList( items.filter(item => !item.checked) ) 
+      setDidList( items.filter(item => item.checked))
+      setUnDoList( items.filter(item => !item.checked))
       return item
     }))
   }
 
   // show list
   function ShowItem() {
-    return (
-      items.map((item, index) => {
-        // console.log(item, index)
-        return(
-          <li key={index} className={item.todo}>
-            <label className="todoList_label">
-              <input className="todoList_input" type="checkbox" value="true" checked={item.checked}  onChange={updateDidList}/>
-              <span >{item.todo}</span>
-            </label>
-            <a href="#">
-              <i className="fa fa-times" onClick={removeItem}></i>
-            </a>
-          </li>
-        )
-      })
-    )
+    if (items.length === 0) {
+      return (
+        <b>目前暫無待辦事項</b>
+      )
+    } else {
+      return (
+        items.map((item, index) => {
+          // console.log(item, index)
+          return(
+            <li key={index} className={item.todo} id={item.id}>
+              <label className="todoList_label">
+                <input className="todoList_input" type="checkbox" value="true" checked={item.checked}  onChange={updateDidList}/>
+                <span >{item.todo}</span>
+              </label>
+              <a href="#">
+                <i className="fa fa-times" onClick={removeItem}></i>
+              </a>
+            </li>
+          )
+        })
+      )
+    }
   }
   function ShowUndo() {
     return (
@@ -176,7 +209,7 @@ function App(){
         <div className="conatiner todoListPage vhContainer">
           <div className="todoList_Content">
             <div className="inputBox">
-              <input value={value} type="text" placeholder="請輸入待辦事項" onChange={saveInput}/>
+              <input className={items.length} value={value} type="text" placeholder="請輸入待辦事項" onChange={saveInput}/>
               <a href="#">
                 <i className="fa fa-plus" style={{"cursor":"pointer"}} onClick={updateList}></i>
               </a>
