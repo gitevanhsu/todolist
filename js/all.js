@@ -56,10 +56,11 @@ function App(){
       setValue('')
     } else {
       setItems([...items, { id ,todo: value, checked:false }] )
-      setUnDoList( [...items, { id, checked:false ,todo: value }] ) 
       // after save data, clear input value
       setValue('')
     }
+    setUnDoList( [...items, { id ,todo: value, checked:false }].filter(item => !item.checked) )
+
   }
   
   // remove item
