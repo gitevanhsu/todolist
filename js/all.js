@@ -38,16 +38,6 @@ function App(){
       id: "5",
       todo: "約ada禮拜四吃晚餐",
       checked: false,
-    },
-    {
-      id: "6",
-      todo: "123",
-      checked: false,
-    },
-    {
-      id: "7",
-      todo: "123",
-      checked: false,
     }
   ])
   // save input data 
@@ -61,8 +51,9 @@ function App(){
   // update list
   function updateList() {
     // save the data
-    if (value === '' ) {
+    if (value.trim().length === 0) {
       alert('請輸入項目')
+      setValue('')
     } else {
       setItems([...items, { id ,todo: value, checked:false }] )
       setUnDoList( [...items, { id, checked:false ,todo: value }] ) 
@@ -78,6 +69,7 @@ function App(){
     const temp = e.target.parentNode.parentNode
     setItems( items.filter(item => item.id !== temp.id))
     setUnDoList( items.filter(item => item.id !== temp.id))
+    setDidList( didList.filter(item => item.id !== temp.id))
   }
   const [unDoList, setUnDoList] = useState([...items])
   
@@ -124,29 +116,41 @@ function App(){
     }
   }
   function ShowUndo() {
-    return (
-      unDoList.map((item, index) => {
-        // console.log(item, index)
-        return(
-          <li key={index} className={item.todo}>
-            <label className="todoList_label">
-              <input className="todoList_input" type="checkbox" value="true" checked={item.checked}  onChange={updateDidList}/>
-              <span >{item.todo}</span>
-            </label>
-            <a href="#">
-              <i className="fa fa-times" onClick={removeItem}></i>
-            </a>
-          </li>
-        )
-      })
-    )
+    if (items.length === 0){
+      return (
+        <b>目前暫無待辦事項</b>
+      )
+    } else {
+      return (
+        unDoList.map((item, index) => {
+          // console.log(item, index)
+          return(
+            <li key={index} className={item.todo} id={item.id}>
+              <label className="todoList_label">
+                <input className="todoList_input" type="checkbox" value="true" checked={item.checked}  onChange={updateDidList}/>
+                <span >{item.todo}</span>
+              </label>
+              <a href="#">
+                <i className="fa fa-times" onClick={removeItem}></i>
+              </a>
+            </li>
+          )
+        })
+      )
+    }
+    
   }
   function ShowDid() {
+    if (didList.length === 0){
+      return (
+        <b>目前尚未完成代辦事項</b>
+      )
+    }
     return (
       didList.map((item, index) => {
         // console.log(item, index)
         return(
-          <li key={index} className={item.todo}>
+          <li key={index} className={item.todo} id={item.id}>
             <label className="todoList_label">
               <input className="todoList_input" type="checkbox" value="true" checked={item.checked}  onChange={updateDidList}/>
               <span >{item.todo}</span>
