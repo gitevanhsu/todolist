@@ -59,16 +59,14 @@ function App(){
       setUnDoList( [...items, { id, checked:false ,todo: value }] ) 
       // after save data, clear input value
       setValue('')
-      // console.log(items)
     }
   }
   
   // remove item
   function removeItem(e){
-    // console.log(e.target.parentNode.parentNode.className)
     const temp = e.target.parentNode.parentNode
     setItems( items.filter(item => item.id !== temp.id))
-    setUnDoList( items.filter(item => item.id !== temp.id))
+    setUnDoList( unDoList.filter(item => item.id !== temp.id))
     setDidList( didList.filter(item => item.id !== temp.id))
   }
   const [unDoList, setUnDoList] = useState([...items])
@@ -79,8 +77,6 @@ function App(){
   // save the did item
   function updateDidList(e){
     setItems(items.map( item => {
-      // console.log(item.todo ,item.id)
-      // console.log(e.target.parentNode.parentNode.className, e.target.parentNode.parentNode.id)
       if (item.todo === e.target.parentNode.parentNode.className && item.id === e.target.parentNode.parentNode.id){
         item.checked = !item.checked
       }
@@ -116,7 +112,7 @@ function App(){
     }
   }
   function ShowUndo() {
-    if (items.length === 0){
+    if (unDoList.length === 0){
       return (
         <b>目前暫無待辦事項</b>
       )
